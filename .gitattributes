@@ -1,0 +1,16 @@
+# Exclude non-runtime/developer-only files from release source archives
+/.github export-ignore
+/docs export-ignore
+/scripts export-ignore
+/test export-ignore
+/packaging export-ignore
+
+/AGENTS.md export-ignore
+/ARCHITECTURE.md export-ignore
+/CONTRIBUTING.md export-ignore
+/project_structure_features.md export-ignore
+/ai_development_guidelines.md export-ignore
+/project_scope_deliverables.md export-ignore
+/TASKLIST.md export-ignore
+/dist export-ignore
+*_test.go export-ignore

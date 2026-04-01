@@ -1,0 +1,35 @@
+.gocache/
+
+dist/
+
+# Development-only docs
+CLAUDE.md
+AGENTS.md
+
+# Go module/cache directories
+.modcache/
+
+# Prevent committing private keys
+.pub
+.pub.pub
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+*.pem
+*.key
+*.ppk
+
+# Environment and logs
+.env
+.env.*
+*.log
+*.logs
+
+# macOS and Windows system files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE settings
+.vscode/
+.idea/

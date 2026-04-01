@@ -1,0 +1,6 @@
+Risk Assessment Notes - Q3
+
+1. FX exposure: 15% of revenue denominated in EUR; hedging strategy in place.
+2. Concentration risk: top 3 customers account for 28% of revenue.
+3. Regulatory: no material changes expected in the current quarter.
+4. Technology: infrastructure migration on track; no service disruptions anticipated.

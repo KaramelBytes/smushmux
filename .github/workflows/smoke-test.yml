@@ -1,0 +1,93 @@
+name: Smoke Tests (Provider-Specific)
+on:
+  workflow_dispatch:
+    inputs:
+      test_ollama:
+        description: "Test Ollama (requires local Ollama instance)"
+        required: false
+        default: "false"
+        type: boolean
+      test_openrouter:
+        description: "Test OpenRouter free-tier API (requires OPENROUTER_API_KEY secret)"
+        required: false
+        default: "false"
+        type: boolean
+      ollama_model:
+        description: "Ollama model to test (default: tinyllama)"
+        required: false
+        default: "tinyllama"
+
+jobs:
+  smoke-tests:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.test_ollama == 'true' || github.event.inputs.test_openrouter == 'true'
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version-file: "go.mod"
+          cache: true
+
+      - name: Set up Ollama (if requested)
+        if: github.event.inputs.test_ollama == 'true'
+        run: |
+          # Start Ollama in background
+          curl -fsSL https://ollama.ai/install.sh | sh
+          # Start ollama serve in background
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          # Wait for Ollama to start
+          sleep 10
+          # Verify Ollama is running
+          ollama --version || echo "Ollama installation incomplete; test will be skipped"
+
+      - name: Run Ollama smoke test
+        if: github.event.inputs.test_ollama == 'true'
+        env:
+          SMOKE_TEST_OLLAMA: "true"
+          OLLAMA_MODEL: ${{ github.event.inputs.ollama_model }}
+        run: |
+          go test -v -timeout 120s -run TestSmokeOllamaBasicCompletion ./internal/ai/... 2>&1 | tee /tmp/ollama_test.log
+          EXIT_CODE=$?
+          echo "Ollama test exit code: $EXIT_CODE"
+          exit $EXIT_CODE
+
+      - name: Run OpenRouter smoke test
+        if: github.event.inputs.test_openrouter == 'true'
+        env:
+          SMOKE_TEST_OPENROUTER: "true"
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "OPENROUTER_API_KEY secret not set; skipping OpenRouter test"
+            exit 0
+          fi
+          go test -v -timeout 120s -run TestSmokeOpenRouterFreeTier ./internal/ai/... 2>&1 | tee /tmp/openrouter_test.log
+          EXIT_CODE=$?
+          echo "OpenRouter test exit code: $EXIT_CODE"
+          exit $EXIT_CODE
+
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: smoke-test-logs
+          path: |
+            /tmp/ollama.log
+            /tmp/ollama_test.log
+            /tmp/openrouter_test.log
+
+      - name: Report results
+        if: always()
+        run: |
+          echo "## Smoke Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f /tmp/ollama_test.log ]; then
+            echo "### Ollama Test" >> $GITHUB_STEP_SUMMARY
+            tail -20 /tmp/ollama_test.log >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f /tmp/openrouter_test.log ]; then
+            echo "### OpenRouter Test" >> $GITHUB_STEP_SUMMARY
+            tail -20 /tmp/openrouter_test.log >> $GITHUB_STEP_SUMMARY
+          fi

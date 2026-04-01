@@ -1,0 +1,28 @@
+{
+  "name": "evidence_mode_project",
+  "description": "Offline fixture project for Evidence Mode tests",
+  "instructions": "Summarize the key financial highlights and risks from the provided documents.",
+  "documents": {
+    "aaaaaaaa-0001-0001-0001-000000000001": {
+      "id": "aaaaaaaa-0001-0001-0001-000000000001",
+      "path": "quarterly-report.md",
+      "name": "quarterly-report.md",
+      "description": "Q3 financial report",
+      "content": "# Q3 Financial Report\n\n## Revenue Summary\n\nTotal revenue for Q3 reached $4.2M, representing a 12% increase year-over-year.\n\nKey drivers:\n- Enterprise subscriptions: $2.1M (+18%)\n- Professional services: $1.4M (+7%)\n- Support contracts: $0.7M (+5%)\n\n## Expense Overview\n\nOperating expenses totalled $3.1M, maintaining a healthy 26% operating margin.\n\n## Outlook\n\nQ4 pipeline is strong with $6.8M in qualified opportunities.\n",
+      "tokens": 85,
+      "added_at": "2024-10-01T09:00:00Z"
+    },
+    "aaaaaaaa-0001-0001-0001-000000000002": {
+      "id": "aaaaaaaa-0001-0001-0001-000000000002",
+      "path": "risk-notes.txt",
+      "name": "risk-notes.txt",
+      "description": "Risk assessment notes",
+      "content": "Risk Assessment Notes - Q3\n\n1. FX exposure: 15% of revenue denominated in EUR; hedging strategy in place.\n2. Concentration risk: top 3 customers account for 28% of revenue.\n3. Regulatory: no material changes expected in the current quarter.\n4. Technology: infrastructure migration on track; no service disruptions anticipated.\n",
+      "tokens": 55,
+      "added_at": "2024-10-01T09:00:00Z"
+    }
+  },
+  "config": {},
+  "created_at": "2024-10-01T09:00:00Z",
+  "updated_at": "2024-10-01T09:00:00Z"
+}

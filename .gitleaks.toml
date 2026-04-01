@@ -1,0 +1,27 @@
+title = "SmushMux Secret Scanning"
+version = "9.14.3"
+
+[allowlist]
+description = "Allow common false positives"
+paths = [
+  "^docs/",
+  "^examples/",
+  "^README\\.md$",
+  "^CHANGELOG\\.md$",
+  "^cmd/",
+  "^internal/",
+  "^test/",
+  "_test\\.go$",
+  "fixtures/",
+  "testdata/",
+  "^vendor/"
+]
+regexes = [
+  "127\\.0\\.0\\.1",
+  "localhost",
+  "token",
+  "internal",
+  "secret",
+  "password",
+  "key"
+]

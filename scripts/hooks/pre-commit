@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Resolve repo root and run the secret scan on staged changes
+repo_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+"$repo_root/scripts/secret_scan.sh" --staged
+

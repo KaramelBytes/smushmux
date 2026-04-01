@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  secret-scan:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Needed for Gitleaks to work properly
+      - name: Install Gitleaks
+        run: go install github.com/zricethezav/gitleaks/v8@v8.24.2
+      - name: Gitleaks Secret Scan
+        run: |
+          export PATH="$(go env GOPATH)/bin:$PATH"
+          gitleaks detect --source . --config .gitleaks.toml --redact --no-banner --exit-code 1
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.x'
+      - name: GolangCI-Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.64.8
+          args: --timeout=3m --disable-all -E errcheck -E govet -E ineffassign -E staticcheck
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.x'
+      - name: Get dependencies
+        run: go mod tidy
+      - name: Vet
+        run: go vet ./...
+      - name: Build
+        run: go build -v ./...
+      - name: Test with coverage
+        run: |
+          mkdir -p coverage
+          go test -race -coverprofile=coverage/coverage.txt -covermode=atomic ./...
+      - name: Enforce lightweight coverage floors
+        run: |
+          set -euo pipefail
+          summary="$(go test -cover ./...)"
+          echo "$summary"
+
+          cmd_cov="$(echo "$summary" | awk '/github.com\/KaramelBytes\/smushmux\/cmd/ && /coverage:/ { gsub("%", "", $(NF-2)); print $(NF-2); exit }')"
+          ai_cov="$(echo "$summary" | awk '/github.com\/KaramelBytes\/smushmux\/internal\/ai/ && /coverage:/ { gsub("%", "", $(NF-2)); print $(NF-2); exit }')"
+
+          if [ -z "${cmd_cov:-}" ] || [ -z "${ai_cov:-}" ]; then
+            echo "failed to parse coverage report for cmd/internal/ai"
+            exit 1
+          fi
+
+          awk -v c="$cmd_cov" 'BEGIN { if (c + 0 < 55.0) { printf("cmd coverage %.1f%% is below 55.0%%\n", c); exit 1 } }'
+          awk -v c="$ai_cov" 'BEGIN { if (c + 0 < 60.0) { printf("internal/ai coverage %.1f%% is below 60.0%%\n", c); exit 1 } }'
+
+          echo "coverage floors satisfied: cmd=${cmd_cov}% internal/ai=${ai_cov}%"
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/coverage.txt
+          fail_ci_if_error: false

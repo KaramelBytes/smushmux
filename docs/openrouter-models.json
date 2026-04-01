@@ -1,0 +1,32 @@
+{
+  "deepseek/deepseek-r1:free": {
+    "Name": "deepseek/deepseek-r1:free",
+    "ContextTokens": 128000,
+    "InputPerK": 0.0,
+    "OutputPerK": 0.0
+  },
+  "openai/gpt-4o-mini": {
+    "Name": "openai/gpt-4o-mini",
+    "ContextTokens": 128000,
+    "InputPerK": 0.0006,
+    "OutputPerK": 0.0024
+  },
+  "openai/gpt-4o": {
+    "Name": "openai/gpt-4o",
+    "ContextTokens": 128000,
+    "InputPerK": 0.005,
+    "OutputPerK": 0.015
+  },
+  "openai/gpt-4.1-mini": {
+    "Name": "openai/gpt-4.1-mini",
+    "ContextTokens": 128000,
+    "InputPerK": 0.0005,
+    "OutputPerK": 0.0015
+  },
+  "anthropic/claude-3.5-sonnet": {
+    "Name": "anthropic/claude-3.5-sonnet",
+    "ContextTokens": 200000,
+    "InputPerK": 0.003,
+    "OutputPerK": 0.015
+  }
+}

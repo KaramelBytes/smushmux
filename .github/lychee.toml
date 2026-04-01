@@ -1,0 +1,27 @@
+# Lychee configuration for link checking in this repository
+# Docs: https://github.com/lycheeverse/lychee#configuration
+
+# Exclude URLs that are expected to be non-resolvable in CI or are placeholders
+exclude = [
+  # Local/dev endpoints
+  '^http://127\.0\.0\.1:11434/?$',
+  '^http://localhost(?::\d+)?/?.*$',
+  # API endpoint documented as POST; GET/HEAD may return 404/405
+  '^https://openrouter\.ai/api/v1/chat/completions$',
+  # Placeholder examples in docs
+  '^https://example\.com/.*$',
+  # Release asset URLs may not exist until a release is cut
+  '^https://github\.com/.*/releases/latest/download/.*$'
+]
+
+# Retry settings to be a bit more robust
+max_retries = 2
+retry_wait_time = 2
+
+# Use default accepted statuses (2xx), and rely on targeted excludes above for edge cases
+
+# Disable progress output for CI logs
+no_progress = true
+
+# User agent to avoid being blocked by some CDNs
+user_agent = "lychee link checker"

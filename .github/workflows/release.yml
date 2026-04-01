@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.x'
+      - name: Build cross-platform binaries
+        env:
+          TARGETS: linux/amd64 darwin/arm64 windows/amd64
+        run: |
+          chmod +x scripts/build.sh
+          ./scripts/build.sh
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: smushmux-binaries
+          path: dist/
+      - name: Generate checksums
+        run: |
+          cd dist
+          sha256sum smushmux-* > checksums.txt
+          cat checksums.txt
+      - name: List files to be released
+        run: |
+          echo "Files to be released:"
+          ls -la dist/smushmux-* dist/checksums.txt
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/smushmux-*
+            dist/checksums.txt
+          generate_release_notes: true
+          fail_on_unmatched_files: true
