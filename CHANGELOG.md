@@ -12,7 +12,7 @@ This update formally freezes the feature set of the legacy single-shot architect
 
 ### 📚 Documentation
 - Updated `README.md` and `ARCHITECTURE.md` with explicit "Cutoff Version" notifications discussing constraints for memory-limited Macs.
-- Marked remaining items in `docs/testing-roadmap.md` as skipped/archived, signifying the stability of the core prior to vNext's architectural shift.
+- Marked remaining internal test-roadmap items as skipped/archived, signifying the stability of the core prior to vNext's architectural shift.
 
 ### 🔧 Changed
 - Table summaries automatically drop excess columns and fast-continue through rows exceeding bounds instead of attempting to consume processing time or expanding the token payload further.
@@ -45,7 +45,7 @@ This update formally freezes the feature set of the legacy single-shot architect
 - Added tests covering explain report rendering and retrieval evidence sections.
 - Added integration tests validating evidence mode behavior with fixture projects.
 - Added backlog note to expand offline test coverage for packages that currently report no test files (for example, root package and internal/config).
-- Added `docs/testing-roadmap.md` with prioritized offline test coverage targets and effort estimates.
+- Added an internal testing roadmap with prioritized offline test coverage targets and effort estimates.
 - Added offline unit tests for `internal/config` (`Load`/`Save` defaults, env precedence, and file path behavior).
 - Added offline unit tests for `internal/utils/files.go` (`EnsureProjectDir`, `SafeWriteFile`, `PrettyJSON`, and `FindProjectRoot`).
 - Added offline command tests for `cmd/config.go` and `cmd/models.go` (validation, normalization, and preset-fetch behavior).
@@ -58,7 +58,7 @@ This update formally freezes the feature set of the legacy single-shot architect
 - Added a lightweight CI coverage gate enforcing minimum package coverage for `cmd` (>=55%) and `internal/ai` (>=60%).
 - Added optional provider-specific smoke-test workflow (`.github/workflows/smoke-test.yml`) with manual dispatch trigger for Ollama and OpenRouter free-tier testing.
 - Added smoke tests for Ollama basic completion (`TestSmokeOllamaBasicCompletion`) and OpenRouter free-tier classification (`TestSmokeOpenRouterFreeTier`) in `internal/ai/smoke_test_providers_test.go`.
-- Smoke tests are skipped by default and only execute when explicitly enabled via env vars or GitHub Actions workflow dispatch; see `docs/testing-roadmap.md#phase-7` for usage details.
+- Smoke tests are skipped by default and only execute when explicitly enabled via env vars or GitHub Actions workflow dispatch.
 
 ## Batch Analysis & Memory Safety Improvements (Mid-October 2025)
 

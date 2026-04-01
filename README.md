@@ -1,9 +1,8 @@
 # SmushMux CLI
 
 > 🎩 **Legacy Notice**: This project represents "SmushMux v1", a single-shot, statistical-summarizing document merger initially built in 2025 for a plant geneticist analyzing dense CSV/XLSX data. A final  polish pass was completed and development locked in early 2026. To support operation on memory-constrained local machines, we explicitly set parser column/row limits and optionally cap global token contexts to avoid swapping. We know enough to do it better now—future tracking and improvements will occur in the agentic SmushMux vNext.
+> 🔒 **Archive Status**: This repository is read-only and unmaintained.
 
-![CI](https://github.com/KaramelBytes/smushmux/actions/workflows/ci.yml/badge.svg?branch=main)
-![CodeQL](https://github.com/KaramelBytes/smushmux/actions/workflows/codeql.yml/badge.svg?branch=main)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 SmushMux is a Go CLI that merges multiple documents into a unified, AI-ready context and sends it to models via OpenRouter or Ollama for analysis, synthesis, and content generation.
